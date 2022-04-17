@@ -5,7 +5,7 @@ class Decrypt:
     def __init__(self, filename, session_key):
         self.key_stream_generator = KeyStreamGenerator()
         self.key_stream_generator.set_session_key(session_key=session_key)
-        self.output_filename = '.'.join(['output'] + filename.split('.')[1:])
+        self.output_filename = '.'.join(['output'] + filename.split('.')[1:-1])
         try:
             self.file_reader = open(filename, 'rb')
             self.file_writer = open(self.output_filename, 'wb')
