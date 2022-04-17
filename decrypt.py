@@ -1,17 +1,18 @@
 from keystream_gen import KeyStreamGenerator
 
 
-class Encrypt:
+class Decrypt:
     def __init__(self, filename, session_key):
         self.key_stream_generator = KeyStreamGenerator()
         self.key_stream_generator.set_session_key(session_key=session_key)
+        self.output_filename = '.'.join(['output'] + filename.split('.')[1:])
         try:
             self.file_reader = open(filename, 'rb')
-            self.file_writer = open(filename + '.enc', 'wb')
+            self.file_writer = open(self.output_filename, 'wb')
         except IOError:
             print('problem with file opening')
 
-    def encrypt(self):
+    def decrypt(self):
         bin_file = bytearray(self.file_reader.read())
         size = len(bin_file)
         output_bin = bytearray(size)
@@ -28,5 +29,5 @@ class Encrypt:
 if __name__ == '__main__':
     filename = input('filename: ')
     session_key = input('session key: ')
-    encrypt = Encrypt(filename=filename, session_key=session_key)
-    encrypt.encrypt()
+    decrypt = Decrypt(filename=filename, session_key=session_key)
+    decrypt.decrypt()
