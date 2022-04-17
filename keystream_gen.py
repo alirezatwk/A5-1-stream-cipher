@@ -67,7 +67,7 @@ class KeyStreamGenerator:
         output = []
         for i in range(output_size):
             output.append(self.irregular_clock())
-        return output
+        return ''.join(map(str, output))
 
 
 if __name__ == '__main__':
