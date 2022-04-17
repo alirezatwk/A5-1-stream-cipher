@@ -1,4 +1,3 @@
-
 class KeyStreamGenerator:
 
     def __init__(self):
@@ -60,9 +59,11 @@ class KeyStreamGenerator:
         for bit in session_key:
             self.ignoring_irregular_clock(input_bit=int(bit))
 
-    def run(self, session_key: str, output_size: int):
+    def set_session_key(self, session_key: str):
         self.check_session_key(session_key=session_key)
         self.initialization(session_key=session_key)
+
+    def run(self, output_size: int):
         output = []
         for i in range(output_size):
             output.append(self.irregular_clock())
@@ -73,5 +74,5 @@ if __name__ == '__main__':
     session_key = input('session key: ')
     output_bit_size = int(input('output bit size: '))
     key_stream_generator = KeyStreamGenerator()
-    stream_key = key_stream_generator.run(session_key=session_key, output_size=output_bit_size)
-    print(stream_key)
+    key_stream_generator.set_session_key(session_key=session_key)
+    print(key_stream_generator.run(output_size=output_bit_size))
