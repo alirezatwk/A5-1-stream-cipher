@@ -38,15 +38,40 @@ class KeyStreamGenerator:
         self.clock_register(register_idx=1, input_bit=input_bit)
         self.clock_register(register_idx=2, input_bit=input_bit)
 
+    def calculate_majority_bit(self):
+        count = [0, 0]
+        for i in range(3):
+            count[self.lfsr[i][self.clocking_bit[i]]] += 1
+        if count[0] < count[1]:
+            return 1
+        return 0
+
+    def irregular_clock(self):
+        majority_bit = self.calculate_majority_bit()
+        result_bit = 0
+        for i in range(3):
+            result_bit ^= self.lfsr[i][-1]
+        for i in range(3):
+            if majority_bit == self.lfsr[i][self.clocking_bit[i]]:
+                self.clock_register(register_idx=i, input_bit=0)
+        return result_bit
+
     def initialization(self, session_key):
         for bit in session_key:
             self.ignoring_irregular_clock(input_bit=int(bit))
 
-    def run(self, session_key: str):
+    def run(self, session_key: str, output_size: int):
         self.check_session_key(session_key=session_key)
+        self.initialization(session_key=session_key)
+        output = []
+        for i in range(output_size):
+            output.append(self.irregular_clock())
+        return output
 
 
 if __name__ == '__main__':
-    session_key = input()
+    session_key = input('session key: ')
+    output_bit_size = int(input('output bit size: '))
     key_stream_generator = KeyStreamGenerator()
-    key_stream_generator.run(session_key=session_key)
+    stream_key = key_stream_generator.run(session_key=session_key, output_size=output_bit_size)
+    print(stream_key)
